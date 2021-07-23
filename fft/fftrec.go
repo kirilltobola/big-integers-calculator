@@ -6,16 +6,15 @@ import (
 
 var PI float64 = math.Acos(-1)
 
-func Fftrec(poly []int) {
-	polyLen := len(poly)
-	if polyLen == 1 {
+func RecursiveFft(poly []int) {
+	if len(poly) == 1 {
 		return
 	}
 	evenIndexes, oddIndexes := halvePolynomial(poly)
-	Fftrec(evenIndexes)
-	Fftrec(oddIndexes)
+	RecursiveFft(evenIndexes)
+	RecursiveFft(oddIndexes)
 
-	fft(poly, evenIndexes, oddIndexes)
+	recursiveFft(poly, evenIndexes, oddIndexes)
 }
 
 func halvePolynomial(poly []int) (even []int, odd []int) {
@@ -35,22 +34,19 @@ func halvePolynomial(poly []int) (even []int, odd []int) {
 	return evenIndexes, oddIndexes
 }
 
-func fft(poly, evenIndexes, oddIndexes []int) []int {
+func recursiveFft(poly, evenIndexes, oddIndexes []int) {
 	polyLen := len(poly)
 	halfPolyLen := polyLen / 2
 
-	angle := float64(2) * PI / float64(polyLen)
-	powPrimitiveRoot := complex(1.0, 0)
+	angle := 2.0 * PI / float64(polyLen)
+	powPrimitiveRoot := 1 + 0i
 	primitiveRoot := complex(math.Cos(angle), math.Sin(angle))
-
 	for i := 0; i < halfPolyLen; i++ {
-		evenIndex := complex(float64(evenIndexes[i]), 0)
-		oddIndexMulRoot := powPrimitiveRoot * complex(float64(oddIndexes[i]), 0)
-
-		poly[i] = int(real(evenIndex + oddIndexMulRoot))
-		poly[i+halfPolyLen] = int(real(evenIndex - oddIndexMulRoot))
+		evenIndex := evenIndexes[i]
+		oddIndexMulRoot := int(real(powPrimitiveRoot)) * oddIndexes[i]
+		poly[i] = evenIndex + oddIndexMulRoot
+		poly[i+halfPolyLen] = evenIndex - oddIndexMulRoot
 
 		powPrimitiveRoot *= primitiveRoot
 	}
-	return poly
 }
