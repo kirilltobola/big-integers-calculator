@@ -1,19 +1,16 @@
 package main
 
 import (
-	"big-integers-calculator/fft"
+	"big-integers-calculator/polynomial"
+	"fmt"
 )
 
 func main() {
-	poly := []int{1, 2, 3, 4, 1, 2, 3, 4}
-	poly_copy := make([]int, len(poly))
-	copy(poly_copy, poly)
+	poly := []complex128{-5, 2, 8, -3, -3, 0, 1, 0, 1}
+	otherPoly := []complex128{21, -9, -4, 0, 5, 0, 3}
 
-	fft.RecursiveFft(poly_copy)
-	fft.IterativeFft(poly)
-	for i := 0; i < len(poly); i++ {
-		if poly[i] != poly_copy[i] {
-			panic("fft broken!")
-		}
+	polynomial.Multiply(&poly, &otherPoly)
+	for _, elem := range poly {
+		fmt.Printf("%.2f ", real(elem))
 	}
 }
