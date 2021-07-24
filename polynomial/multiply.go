@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func Multiply(poly, otherPoly *[]complex128) {
+func Multiply(poly, otherPoly *[]complex128) []int {
 	greaterLen := getGreaterLen(poly, otherPoly)
 	mulSize := getMulSize(greaterLen)
 
@@ -19,6 +19,11 @@ func Multiply(poly, otherPoly *[]complex128) {
 	}
 
 	fft.IterativeFft(*poly, true)
+	res := make([]int, len(*poly))
+	for i := 0; i < len(res); i++ {
+		res[i] = int(real((*poly)[i]) + 0.5)
+	}
+	return res
 }
 
 func getGreaterLen(poly, otherPoly *[]complex128) int {
