@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"big-integers-calculator/numbers"
 	"html/template"
 	"net/http"
 	"regexp"
@@ -15,7 +15,7 @@ const (
 
 type Data struct {
 	Expression string
-	Result     string
+	Result     []int
 }
 
 func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
@@ -27,17 +27,18 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	template := template.Must(template.ParseFiles("html/index.html"))
 	request.ParseForm()
 	inputExpression := request.FormValue("expression")
+	var res []int
 	switch validateInput(inputExpression) {
 	case NUMBERS:
 		num1, num2 := parseNumbers(inputExpression)
-		fmt.Print(num1, num2)
+		res = numbers.Multiply(num1, num2)
 	case POLYNOMIALS:
 		return
 	}
 
 	data := Data{
 		Expression: request.FormValue("expression"),
-		Result:     "",
+		Result:     res,
 	}
 	template.Execute(writer, data)
 }
