@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"regexp"
+	"strings"
 )
 
 const (
@@ -27,7 +29,8 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	inputExpression := request.FormValue("expression")
 	switch validateInput(inputExpression) {
 	case NUMBERS:
-		return
+		num1, num2 := parseNumbers(inputExpression)
+		fmt.Print(num1, num2)
 	case POLYNOMIALS:
 		return
 	}
@@ -51,4 +54,19 @@ func validateInput(input string) int {
 		return NUMBERS
 	}
 	panic("Incorrect input!")
+}
+
+func parseNumbers(input string) (poly []complex128, otherPoly []complex128) {
+	poly = make([]complex128, 0)
+	otherPoly = make([]complex128, 0)
+
+	data := strings.Split(input, "*")
+	left, right := data[0], data[1]
+	for i := 0; i < len(left); i++ {
+		poly = append(poly, complex(float64(rune(left[i])-'0'), 0))
+	}
+	for i := 0; i < len(right); i++ {
+		otherPoly = append(otherPoly, complex(float64(rune(right[i])-'0'), 0))
+	}
+	return poly, otherPoly
 }
