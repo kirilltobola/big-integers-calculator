@@ -1,4 +1,4 @@
-package polynomial
+package polynomials
 
 import (
 	"big-integers-calculator/fft"

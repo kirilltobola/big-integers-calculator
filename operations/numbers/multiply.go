@@ -1,11 +1,9 @@
 package numbers
 
-import (
-	"big-integers-calculator/polynomial"
-)
+import "big-integers-calculator/operations/polynomials"
 
 func Multiply(number, otherNumber []complex128) []int {
-	res := polynomial.Multiply(number, otherNumber)
+	res := polynomials.Multiply(number, otherNumber)
 	normalize(res)
 	reverse(res)
 	return res

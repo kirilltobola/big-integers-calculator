@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"big-integers-calculator/numbers"
+	"big-integers-calculator/operations/numbers"
 	"html/template"
 	"net/http"
 	"regexp"
