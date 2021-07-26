@@ -32,6 +32,7 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	case NUMBERS:
 		num1, num2 := parseNumbers(inputExpression)
 		res = numbers.Multiply(num1, num2)
+
 	case POLYNOMIALS:
 		return
 	}
@@ -58,16 +59,35 @@ func validateInput(input string) int {
 }
 
 func parseNumbers(input string) (poly []complex128, otherPoly []complex128) {
-	poly = make([]complex128, 0)
-	otherPoly = make([]complex128, 0)
-
 	data := strings.Split(input, "*")
+
+	greaterLen := getGreaterLen(len(data[0]), len(data[1]))
+	mulSize := getMulSize(greaterLen)
+	poly = make([]complex128, mulSize)
+	otherPoly = make([]complex128, mulSize)
+
 	left, right := data[0], data[1]
 	for i := 0; i < len(left); i++ {
-		poly = append(poly, complex(float64(rune(left[i])-'0'), 0))
+		poly[i] = complex(float64(rune(left[len(left)-1-i])-'0'), 0)
 	}
 	for i := 0; i < len(right); i++ {
-		otherPoly = append(otherPoly, complex(float64(rune(right[i])-'0'), 0))
+		otherPoly[i] = complex(float64(rune(right[len(right)-1-i])-'0'), 0)
 	}
 	return poly, otherPoly
+}
+
+func getGreaterLen(len1, len2 int) int {
+	if len1 > len2 {
+		return len1
+	}
+	return len2
+}
+
+func getMulSize(maxPolyLen int) int {
+	mulSize := 1
+	for mulSize < maxPolyLen+1 {
+		mulSize <<= 1
+	}
+	mulSize <<= 1
+	return mulSize
 }
