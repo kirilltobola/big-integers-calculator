@@ -12,8 +12,8 @@ import (
 const MULTIPLY_NUMBERS string = "on"
 
 type Data struct {
-	Expression string
-	Result     []int
+	Input  string
+	Result []int
 }
 
 func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
@@ -24,11 +24,11 @@ func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
 func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	template := template.Must(template.ParseFiles("html/index.html"))
 	request.ParseForm()
-	inputExpression := request.FormValue("expression")
+	input := request.FormValue("expression")
 
 	var res []int
-	validateInput(inputExpression)
-	left, right := parse(inputExpression)
+	validateInput(input)
+	left, right := parse(input)
 	poly1, poly2 := createPolys(left, right)
 	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
 		fillPolys(poly1, poly2, left, right, true)
@@ -39,8 +39,8 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	data := Data{
-		Expression: request.FormValue("expression"),
-		Result:     res,
+		Input:  request.FormValue("expression"),
+		Result: res,
 	}
 	template.Execute(writer, data)
 }
@@ -60,11 +60,9 @@ func parse(input string) (left, right string) {
 }
 
 func createPolys(left, right string) (poly, otherPoly []complex128) {
-	greaterLen := getGreaterLen(len(left), len(right))
-	mulSize := getMulSize(greaterLen)
-
-	poly = make([]complex128, mulSize)
-	otherPoly = make([]complex128, mulSize)
+	size := getMulSize(len(left), len(right))
+	poly = make([]complex128, size)
+	otherPoly = make([]complex128, size)
 	return poly, otherPoly
 }
 
@@ -75,13 +73,14 @@ func getGreaterLen(len1, len2 int) int {
 	return len2
 }
 
-func getMulSize(maxPolyLen int) int {
-	mulSize := 1
-	for mulSize < maxPolyLen+1 {
-		mulSize <<= 1
+func getMulSize(len1, len2 int) int {
+	greaterLen := getGreaterLen(len1, len2)
+	size := 1
+	for size < greaterLen+1 {
+		size <<= 1
 	}
-	mulSize <<= 1
-	return mulSize
+	size <<= 1
+	return size
 }
 
 func fillPolys(poly, otherPoly []complex128, left, right string, mulNumbers bool) {
@@ -94,6 +93,7 @@ func fillPolys(poly, otherPoly []complex128, left, right string, mulNumbers bool
 		}
 		poly[i] = complex(float64(rune(left[index])-'0'), 0)
 	}
+
 	for i := 0; i < len(right); i++ {
 		if mulNumbers {
 			index = len(right) - 1 - i
