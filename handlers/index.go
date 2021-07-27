@@ -66,13 +66,6 @@ func createPolys(left, right string) (poly, otherPoly []complex128) {
 	return poly, otherPoly
 }
 
-func getGreaterLen(len1, len2 int) int {
-	if len1 > len2 {
-		return len1
-	}
-	return len2
-}
-
 func getSize(len1, len2 int) int {
 	greaterLen := getGreaterLen(len1, len2)
 	size := 1
@@ -81,6 +74,13 @@ func getSize(len1, len2 int) int {
 	}
 	size <<= 1
 	return size
+}
+
+func getGreaterLen(len1, len2 int) int {
+	if len1 > len2 {
+		return len1
+	}
+	return len2
 }
 
 func fillPolys(poly, otherPoly []complex128, left, right string, mulNumbers bool) {
