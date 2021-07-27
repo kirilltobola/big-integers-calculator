@@ -8,10 +8,12 @@ import (
 	"strings"
 )
 
-const (
-	NUMBERS = iota
-	POLYNOMIALS
-)
+// const (
+// 	NUMBERS = iota
+// 	POLYNOMIALS
+// )
+
+const MULTIPLY_NUMBERS string = "on"
 
 type Data struct {
 	Expression string
@@ -28,12 +30,12 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
 	inputExpression := request.FormValue("expression")
 	var res []int
-	switch validateInput(inputExpression) {
-	case NUMBERS:
+	validateInput(inputExpression)
+
+	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
 		num1, num2 := parseNumbers(inputExpression)
 		res = numbers.Multiply(num1, num2)
-
-	case POLYNOMIALS:
+	} else {
 		return
 	}
 
@@ -44,21 +46,15 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	template.Execute(writer, data)
 }
 
-func validateInput(input string) int {
-	numbersPattern := `^\d+\*\d+$`
-	polysPattern := `^\(\d+(\s\d+)*\)\*\(\d+(\s\d+)*\)$`
-	polynomials, _ := regexp.Match(polysPattern, []byte(input))
-	numbers, _ := regexp.Match(numbersPattern, []byte(input))
-
-	if polynomials {
-		return POLYNOMIALS
-	} else if numbers {
-		return NUMBERS
+func validateInput(input string) {
+	pattern := `^\d+\*\d+$`
+	correctInput, _ := regexp.Match(pattern, []byte(input))
+	if !correctInput {
+		panic("Incorrect input!")
 	}
-	panic("Incorrect input!")
 }
 
-func parseNumbers(input string) (poly []complex128, otherPoly []complex128) {
+func parseNumbers(input string) (poly, otherPoly []complex128) {
 	data := strings.Split(input, "*")
 
 	greaterLen := getGreaterLen(len(data[0]), len(data[1]))
