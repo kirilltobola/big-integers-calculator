@@ -60,7 +60,7 @@ func parse(input string) (left, right string) {
 }
 
 func createPolys(left, right string) (poly, otherPoly []complex128) {
-	size := getMulSize(len(left), len(right))
+	size := getSize(len(left), len(right))
 	poly = make([]complex128, size)
 	otherPoly = make([]complex128, size)
 	return poly, otherPoly
@@ -73,7 +73,7 @@ func getGreaterLen(len1, len2 int) int {
 	return len2
 }
 
-func getMulSize(len1, len2 int) int {
+func getSize(len1, len2 int) int {
 	greaterLen := getGreaterLen(len1, len2)
 	size := 1
 	for size < greaterLen+1 {
