@@ -2,16 +2,12 @@ package handlers
 
 import (
 	"big-integers-calculator/operations/numbers"
+	"big-integers-calculator/operations/polynomials"
 	"html/template"
 	"net/http"
 	"regexp"
 	"strings"
 )
-
-// const (
-// 	NUMBERS = iota
-// 	POLYNOMIALS
-// )
 
 const MULTIPLY_NUMBERS string = "on"
 
@@ -29,14 +25,17 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	template := template.Must(template.ParseFiles("html/index.html"))
 	request.ParseForm()
 	inputExpression := request.FormValue("expression")
+
 	var res []int
 	validateInput(inputExpression)
-
+	left, right := parse(inputExpression)
+	poly1, poly2 := createPolys(left, right)
 	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
-		num1, num2 := parseNumbers(inputExpression)
-		res = numbers.Multiply(num1, num2)
+		fillPolys(poly1, poly2, left, right, true)
+		res = numbers.Multiply(poly1, poly2)
 	} else {
-		return
+		fillPolys(poly1, poly2, left, right, false)
+		res = polynomials.Multiply(poly1, poly2)
 	}
 
 	data := Data{
@@ -54,21 +53,18 @@ func validateInput(input string) {
 	}
 }
 
-func parseNumbers(input string) (poly, otherPoly []complex128) {
+func parse(input string) (left, right string) {
 	data := strings.Split(input, "*")
+	left, right = data[0], data[1]
+	return left, right
+}
 
-	greaterLen := getGreaterLen(len(data[0]), len(data[1]))
+func createPolys(left, right string) (poly, otherPoly []complex128) {
+	greaterLen := getGreaterLen(len(left), len(right))
 	mulSize := getMulSize(greaterLen)
+
 	poly = make([]complex128, mulSize)
 	otherPoly = make([]complex128, mulSize)
-
-	left, right := data[0], data[1]
-	for i := 0; i < len(left); i++ {
-		poly[i] = complex(float64(rune(left[len(left)-1-i])-'0'), 0)
-	}
-	for i := 0; i < len(right); i++ {
-		otherPoly[i] = complex(float64(rune(right[len(right)-1-i])-'0'), 0)
-	}
 	return poly, otherPoly
 }
 
@@ -86,4 +82,24 @@ func getMulSize(maxPolyLen int) int {
 	}
 	mulSize <<= 1
 	return mulSize
+}
+
+func fillPolys(poly, otherPoly []complex128, left, right string, mulNumbers bool) {
+	var index int
+	for i := 0; i < len(left); i++ {
+		if mulNumbers {
+			index = len(left) - 1 - i
+		} else {
+			index = i
+		}
+		poly[i] = complex(float64(rune(left[index])-'0'), 0)
+	}
+	for i := 0; i < len(right); i++ {
+		if mulNumbers {
+			index = len(right) - 1 - i
+		} else {
+			index = i
+		}
+		otherPoly[i] = complex(float64(rune(right[index])-'0'), 0)
+	}
 }
