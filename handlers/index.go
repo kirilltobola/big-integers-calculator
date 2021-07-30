@@ -27,14 +27,16 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	poly1, poly2 := createPolys(parse(input))
 	var data types.Data
 	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
-		fillPolys(poly1, poly2, left, right, true)
+		fillNumber(poly1, left)
+		fillNumber(poly2, right)
 		var res types.Number = numbers.Multiply(poly1, poly2)
 		data = types.Data{
 			Input:  request.FormValue("expression"),
 			Result: res.Trim().String(),
 		}
 	} else {
-		fillPolys(poly1, poly2, left, right, false)
+		fillPoly(poly1, left)
+		fillPoly(poly2, right)
 		var res types.Poly = polynomials.Multiply(poly1, poly2)
 		data = types.Data{
 			Input:  request.FormValue("expression"),
@@ -83,23 +85,16 @@ func getGreaterLen(len1, len2 int) int {
 	return len2
 }
 
-func fillPolys(poly, otherPoly []complex128, left, right string, mulNumbers bool) {
-	var index int
-	for i := 0; i < len(left); i++ {
-		if mulNumbers {
-			index = len(left) - 1 - i
-		} else {
-			index = i
-		}
-		poly[i] = complex(float64(rune(left[index])-'0'), 0)
+func fillPoly(poly []complex128, data string) {
+	dataSize := len(data)
+	for i := 0; i < dataSize; i++ {
+		poly[i] = complex(float64(rune(data[i])-'0'), 0)
 	}
+}
 
-	for i := 0; i < len(right); i++ {
-		if mulNumbers {
-			index = len(right) - 1 - i
-		} else {
-			index = i
-		}
-		otherPoly[i] = complex(float64(rune(right[index])-'0'), 0)
+func fillNumber(number []complex128, data string) {
+	dataSize := len(data)
+	for i := 0; i < dataSize; i++ {
+		number[i] = complex(float64(rune(data[dataSize-1-i])-'0'), 0)
 	}
 }
