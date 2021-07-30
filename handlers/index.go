@@ -3,60 +3,14 @@ package handlers
 import (
 	"big-integers-calculator/operations/numbers"
 	"big-integers-calculator/operations/polynomials"
-	"bytes"
+	"big-integers-calculator/types"
 	"html/template"
 	"net/http"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
 const MULTIPLY_NUMBERS string = "on"
-
-type poly []int
-
-func (p poly) Trim() poly {
-	size := len(p)
-	for i := 0; i < size; i++ {
-		if p[size-1-i] != 0 {
-			return p[:size-i]
-		}
-	}
-	return []int{0}
-}
-
-func (p poly) String() string {
-	var b bytes.Buffer
-	for _, elem := range p {
-		b.WriteString(strconv.Itoa(elem))
-		b.WriteString(" ")
-	}
-	return b.String()
-}
-
-type number []int
-
-func (n number) Trim() number {
-	for i, elem := range n {
-		if elem != 0 {
-			return n[i:]
-		}
-	}
-	return []int{0}
-}
-
-func (n number) String() string {
-	var b bytes.Buffer
-	for _, elem := range n {
-		b.WriteString(strconv.Itoa(elem))
-	}
-	return b.String()
-}
-
-type Data struct {
-	Input  string
-	Result string
-}
 
 func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
 	template := template.Must(template.ParseFiles("html/index.html"))
@@ -71,18 +25,18 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 
 	left, right := parse(input)
 	poly1, poly2 := createPolys(parse(input))
-	var data Data
+	var data types.Data
 	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
 		fillPolys(poly1, poly2, left, right, true)
-		var res number = numbers.Multiply(poly1, poly2)
-		data = Data{
+		var res types.Number = numbers.Multiply(poly1, poly2)
+		data = types.Data{
 			Input:  request.FormValue("expression"),
 			Result: res.Trim().String(),
 		}
 	} else {
 		fillPolys(poly1, poly2, left, right, false)
-		var res poly = polynomials.Multiply(poly1, poly2)
-		data = Data{
+		var res types.Poly = polynomials.Multiply(poly1, poly2)
+		data = types.Data{
 			Input:  request.FormValue("expression"),
 			Result: res.Trim().String(),
 		}
