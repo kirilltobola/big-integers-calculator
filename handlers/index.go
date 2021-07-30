@@ -12,36 +12,38 @@ import (
 
 const MULTIPLY_NUMBERS string = "on"
 
+const (
+	INDEX_PATH      string = "html/index.html"
+	HTML_INPUT_NAME string = "expression"
+)
+
 func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
-	template := template.Must(template.ParseFiles("html/index.html"))
+	template := template.Must(template.ParseFiles(INDEX_PATH))
 	template.Execute(writer, nil)
 }
 
 func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
-	template := template.Must(template.ParseFiles("html/index.html"))
+	template := template.Must(template.ParseFiles(INDEX_PATH))
 	request.ParseForm()
-	input := request.FormValue("expression")
-	validateInput(input)
+	input := request.FormValue(HTML_INPUT_NAME)
 
+	validateInput(input)
+	var data types.Data = types.Data{
+		Input: request.FormValue(HTML_INPUT_NAME),
+	}
 	left, right := parse(input)
-	poly1, poly2 := createPolys(parse(input))
-	var data types.Data
+	poly1, poly2 := createPolys(left, right)
+
 	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
 		fillNumber(poly1, left)
 		fillNumber(poly2, right)
 		var res types.Number = numbers.Multiply(poly1, poly2)
-		data = types.Data{
-			Input:  request.FormValue("expression"),
-			Result: res.Trim().String(),
-		}
+		data.Result = res.Trim().String()
 	} else {
 		fillPoly(poly1, left)
 		fillPoly(poly2, right)
 		var res types.Poly = polynomials.Multiply(poly1, poly2)
-		data = types.Data{
-			Input:  request.FormValue("expression"),
-			Result: res.Trim().String(),
-		}
+		data.Result = res.Trim().String()
 	}
 
 	template.Execute(writer, data)
@@ -56,7 +58,8 @@ func validateInput(input string) {
 }
 
 func parse(input string) (left, right string) {
-	data := strings.Split(input, "*")
+	delimeter := "*"
+	data := strings.Split(input, delimeter)
 	left, right = data[0], data[1]
 	return left, right
 }
