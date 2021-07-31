@@ -1,12 +1,15 @@
 package numbers
 
-import "big-integers-calculator/operations/polynomials"
+import (
+	"big-integers-calculator/operations/polynomials"
+	"big-integers-calculator/types"
+)
 
-func Multiply(number, otherNumber []complex128) []int {
+func Multiply(number, otherNumber []complex128) types.Number {
 	res := polynomials.Multiply(number, otherNumber)
 	normalize(res)
 	reverse(res)
-	return res
+	return types.Number(res)
 }
 
 func normalize(number []int) {

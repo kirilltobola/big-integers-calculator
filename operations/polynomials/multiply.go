@@ -2,9 +2,10 @@ package polynomials
 
 import (
 	"big-integers-calculator/fft"
+	"big-integers-calculator/types"
 )
 
-func Multiply(poly, otherPoly []complex128) []int {
+func Multiply(poly, otherPoly []complex128) types.Poly {
 	fft.IterativeFft(poly, false)
 	fft.IterativeFft(otherPoly, false)
 	for i := 0; i < len(poly); i++ {
