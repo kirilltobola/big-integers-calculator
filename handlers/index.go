@@ -26,30 +26,15 @@ func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
 func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	template := template.Must(template.ParseFiles(INDEX_PATH))
 	request.ParseForm()
-	input := request.FormValue(HTML_INPUT_NAME)
 	var data types.Data = types.Data{
 		Input: request.FormValue(HTML_INPUT_NAME),
 	}
 
-	if validateInput(input) {
-		left, right := parse(input)
-		poly1, poly2 := createPolys(left, right)
-
-		if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
-			fillNumber(poly1, left)
-			fillNumber(poly2, right)
-			var res types.Number = numbers.Multiply(poly1, poly2)
-			data.Result = res.Trim().String()
-		} else {
-			fillPoly(poly1, left)
-			fillPoly(poly2, right)
-			var res types.Poly = polynomials.Multiply(poly1, poly2)
-			data.Result = res.Trim().String()
-		}
+	if validateInput(data.Input) {
+		multiply(&data, request)
 	} else {
 		data.Error = errors.New("incorrect input")
 	}
-
 	template.Execute(writer, data)
 }
 
@@ -57,6 +42,23 @@ func validateInput(input string) (valid bool) {
 	pattern := `^\d+\*\d+$`
 	valid, _ = regexp.Match(pattern, []byte(input))
 	return valid
+}
+
+func multiply(data *types.Data, request *http.Request) {
+	left, right := parse(data.Input)
+	poly1, poly2 := createPolys(left, right)
+
+	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
+		fillNumber(poly1, left)
+		fillNumber(poly2, right)
+		res := numbers.Multiply(poly1, poly2)
+		data.Result = res.Trim().String()
+	} else {
+		fillPoly(poly1, left)
+		fillPoly(poly2, right)
+		res := polynomials.Multiply(poly1, poly2)
+		data.Result = res.Trim().String()
+	}
 }
 
 func parse(input string) (left, right string) {
