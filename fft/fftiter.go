@@ -52,9 +52,14 @@ func iterativeFft(poly []complex128, interpolate bool) {
 		}
 	}
 	if interpolate {
-		div := complex(float64(polyLen), 0)
-		for i := 0; i < polyLen; i++ {
-			poly[i] /= div
-		}
+		divideBySize(poly)
+	}
+}
+
+func divideBySize(poly []complex128) {
+	size := len(poly)
+	complexSize := complex(float64(size), 0)
+	for i := 0; i < size; i++ {
+		poly[i] /= complexSize
 	}
 }
