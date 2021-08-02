@@ -28,7 +28,7 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	template := template.Must(template.ParseFiles(INDEX_PATH))
 	request.ParseForm()
 	var data types.Data = types.Data{
-		Input: request.FormValue(HTML_INPUT_NAME),
+		Input: strings.TrimSpace(request.FormValue(HTML_INPUT_NAME)),
 	}
 
 	if validateInput(data.Input) {
