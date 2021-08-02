@@ -11,11 +11,12 @@ import (
 	"strings"
 )
 
-const MULTIPLY_NUMBERS string = "on"
-
 const (
-	INDEX_PATH      string = "html/index.html"
-	HTML_INPUT_NAME string = "expression"
+	MULTIPLY_NUMBERS    string = "on"
+	INDEX_PATH          string = "html/index.html"
+	HTML_INPUT_NAME     string = "expression"
+	HTML_MULTIPLY       string = "multiplyNumbers"
+	INCORRECT_INPUT_MSG string = "incorrect input"
 )
 
 func IndexGetHandler(writer http.ResponseWriter, request *http.Request) {
@@ -33,7 +34,7 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 	if validateInput(data.Input) {
 		multiply(&data, request)
 	} else {
-		data.Error = errors.New("incorrect input")
+		data.Error = errors.New(INCORRECT_INPUT_MSG)
 	}
 	template.Execute(writer, data)
 }
@@ -48,7 +49,7 @@ func multiply(data *types.Data, request *http.Request) {
 	left, right := parse(data.Input)
 	poly1, poly2 := createPolys(left, right)
 
-	if request.FormValue("multiplyNumbers") == MULTIPLY_NUMBERS {
+	if request.FormValue(HTML_MULTIPLY) == MULTIPLY_NUMBERS {
 		fillNumber(poly1, left)
 		fillNumber(poly2, right)
 		res := numbers.Multiply(poly1, poly2)
