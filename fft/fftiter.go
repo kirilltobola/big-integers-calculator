@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-var PI float64 = math.Acos(-1)
+const PI = math.Pi
 
 func IterativeFft(poly []complex128, interpolate bool) {
 	putInPlaceElements(poly)
