@@ -23,3 +23,16 @@ func (n Number) String() string {
 	}
 	return b.String()
 }
+
+func (n *Number) Equal(other *Number) bool {
+	if len(*n) != len(*other) {
+		return false
+	}
+
+	for i, elem := range *n {
+		if elem != (*other)[i] {
+			return false
+		}
+	}
+	return true
+}
