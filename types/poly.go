@@ -25,3 +25,17 @@ func (p Poly) String() string {
 	}
 	return b.String()
 }
+
+func (p *Poly) Equal(other *Poly) bool {
+	if len(*p) != len(*other) {
+		return false
+	}
+
+	for i, elem := range *p {
+		if elem != (*other)[i] {
+			return false
+		}
+	}
+
+	return true
+}
