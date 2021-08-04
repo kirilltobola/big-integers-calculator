@@ -6,13 +6,13 @@ import (
 )
 
 func Multiply(poly, otherPoly []complex128) types.Poly {
-	fft.IterativeFft(poly, false)
-	fft.IterativeFft(otherPoly, false)
+	fft.Fft(poly, false)
+	fft.Fft(otherPoly, false)
 	for i := 0; i < len(poly); i++ {
 		(poly)[i] *= (otherPoly)[i]
 	}
 
-	fft.IterativeFft(poly, true)
+	fft.Fft(poly, true)
 	return castToInt(poly)
 }
 

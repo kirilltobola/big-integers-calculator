@@ -6,7 +6,7 @@ import (
 
 const PI = math.Pi
 
-func IterativeFft(poly []complex128, interpolate bool) {
+func Fft(poly []complex128, interpolate bool) {
 	putInPlaceElements(poly)
 	iterativeFft(poly, interpolate)
 }
