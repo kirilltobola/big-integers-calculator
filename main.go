@@ -8,8 +8,13 @@ import (
 )
 
 func main() {
-	router := mux.NewRouter()
+	http.ListenAndServe(":8080", NewRouter())
+}
+
+func NewRouter() (router *mux.Router) {
+	router = mux.NewRouter()
+
 	router.HandleFunc("/", handlers.IndexGetHandler).Methods("GET")
 	router.HandleFunc("/", handlers.IndexPostHandler).Methods("POST")
-	http.ListenAndServe(":8080", router)
+	return router
 }
