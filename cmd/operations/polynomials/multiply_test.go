@@ -1,8 +1,8 @@
 package polynomials_test
 
 import (
-	"big-integers-calculator/operations/polynomials"
-	"big-integers-calculator/types"
+	"big-integers-calculator/cmd/operations/polynomials"
+	"big-integers-calculator/cmd/types"
 	"testing"
 )
 

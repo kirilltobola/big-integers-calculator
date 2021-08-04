@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"big-integers-calculator/operations/numbers"
-	"big-integers-calculator/operations/polynomials"
-	"big-integers-calculator/types"
+	"big-integers-calculator/cmd/operations/numbers"
+	"big-integers-calculator/cmd/operations/polynomials"
+	"big-integers-calculator/cmd/types"
 	"errors"
 	"html/template"
 	"net/http"
@@ -13,7 +13,7 @@ import (
 
 const (
 	MULTIPLY_NUMBERS    string = "on"
-	INDEX_PATH          string = "html/index.html"
+	INDEX_PATH          string = "assets/html/index.html"
 	HTML_INPUT_NAME     string = "expression"
 	HTML_MULTIPLY       string = "multiplyNumbers"
 	INCORRECT_INPUT_MSG string = "incorrect input"

@@ -1,8 +1,8 @@
 package numbers
 
 import (
-	"big-integers-calculator/operations/polynomials"
-	"big-integers-calculator/types"
+	"big-integers-calculator/cmd/operations/polynomials"
+	"big-integers-calculator/cmd/types"
 )
 
 func Multiply(number, otherNumber []complex128) types.Number {

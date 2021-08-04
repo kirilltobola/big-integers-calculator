@@ -1,8 +1,8 @@
 package polynomials
 
 import (
-	"big-integers-calculator/fft"
-	"big-integers-calculator/types"
+	"big-integers-calculator/cmd/fft"
+	"big-integers-calculator/cmd/types"
 )
 
 func Multiply(poly, otherPoly []complex128) types.Poly {

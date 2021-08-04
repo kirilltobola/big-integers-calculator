@@ -1,7 +1,7 @@
 package main
 
 import (
-	"big-integers-calculator/handlers"
+	"big-integers-calculator/web/handlers"
 	"net/http"
 
 	"github.com/gorilla/mux"
