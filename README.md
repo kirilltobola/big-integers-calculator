@@ -1,1 +1,1 @@
-# big-integers-calculator
+# multiply-polynomials

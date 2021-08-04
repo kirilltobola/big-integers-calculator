@@ -31,21 +31,21 @@ func IndexPostHandler(writer http.ResponseWriter, request *http.Request) {
 		Input: strings.TrimSpace(request.FormValue(HTML_INPUT_NAME)),
 	}
 
-	if validateInput(data.Input) {
-		multiply(&data, request)
+	if ValidateInput(data.Input) {
+		Multiply(&data, request)
 	} else {
 		data.Error = errors.New(INCORRECT_INPUT_MSG)
 	}
 	template.Execute(writer, data)
 }
 
-func validateInput(input string) (valid bool) {
+func ValidateInput(input string) (valid bool) {
 	pattern := `^\d+\*\d+$`
 	valid, _ = regexp.Match(pattern, []byte(input))
 	return valid
 }
 
-func multiply(data *types.Data, request *http.Request) {
+func Multiply(data *types.Data, request *http.Request) {
 	left, right := parse(data.Input)
 	poly1, poly2 := createPolys(left, right)
 

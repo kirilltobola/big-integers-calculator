@@ -1,6 +1,7 @@
 package main
 
 import (
+	"big-integers-calculator/api"
 	"big-integers-calculator/web/handlers"
 	"net/http"
 
@@ -16,5 +17,6 @@ func NewRouter() (router *mux.Router) {
 
 	router.HandleFunc("/", handlers.IndexGetHandler).Methods("GET")
 	router.HandleFunc("/", handlers.IndexPostHandler).Methods("POST")
+	router.HandleFunc("/api", api.MuliplyData).Methods("POST")
 	return router
 }
